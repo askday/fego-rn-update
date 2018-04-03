@@ -12,6 +12,7 @@
 		"android",
 		"ios",
 		"package.json",
+		"FegoRnUpdate.podspec",
 		"pkg.sh",
 		"pkgCmd",
 		"README.md",
