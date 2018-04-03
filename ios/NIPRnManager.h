@@ -16,17 +16,17 @@
 
 @class NIPRnController;
 
-typedef NS_ENUM(NSInteger,HotReloadStatus) {
+typedef NS_ENUM(NSInteger, HotReloadStatus) {
     NIPHotReloadSuccess = 0,
     NIPReadConfigFailed,
     NIPDownloadBundleFailed,
     NIPMD5CheckFailed
-    
+
 };
 
 @protocol NIPRnManagerDelegate <NSObject>
--(void)successHandlerWithFilePath:(NSString *)filePath;
--(void)failedHandlerWithStatus:(HotReloadStatus)status;
+- (void)successHandlerWithFilePath:(NSString *)filePath;
+- (void)failedHandlerWithStatus:(HotReloadStatus)status;
 @end
 
 @interface NIPRnManager : NSObject <RCTBridgeModule>
@@ -86,25 +86,26 @@ typedef NS_ENUM(NSInteger,HotReloadStatus) {
 /**
  后台静默下载rn资源包
  */
-- (void)requestRCTAssetsBehind;
--(void)unzipBundle:(NSString *)filePath;
+- (void)requestRCTAssetsBehind:(NSString *)reLoadBundleName;
+;
+- (void)unzipBundle:(NSString *)filePath;
 
 /**
  是否支持热更新
  */
-@property (nonatomic, assign) BOOL noHotUpdate;
+@property(nonatomic, assign) BOOL noHotUpdate;
 /**
  是否不使用jsServer
  */
-@property (nonatomic, assign) BOOL noJsServer;
+@property(nonatomic, assign) BOOL noJsServer;
 /**
  bundle的url
  */
-@property (nonatomic, copy) NSString *bundleUrl;
+@property(nonatomic, copy) NSString *bundleUrl;
 /**
  字体名字
  */
-@property (nonatomic, copy) NSArray *fontNames;
-@property (nonatomic,weak) id<NIPRnManagerDelegate> delegate;
+@property(nonatomic, copy) NSArray *fontNames;
+@property(nonatomic, weak) id<NIPRnManagerDelegate> delegate;
 
 @end

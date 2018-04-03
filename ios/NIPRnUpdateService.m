@@ -1,9 +1,5 @@
 //
 //  NIPRnUpdateService.m
-//  NSIP
-//
-//  Created by 赵松 on 17/3/30.
-//  Copyright © 2017年 netease. All rights reserved.
 //
 
 #import "NIPRnUpdateService.h"
@@ -47,16 +43,11 @@
  */
 @property (nonatomic, strong) NSString *remoteMD5;
 
-@property (nonatomic, copy) CFRCTUpdateAssetsSuccesBlock successBlock;
-@property (nonatomic, copy) CFRCTUpdateAssetsFailBlock failBlock;
-
 @end
 
 @implementation NIPRnUpdateService
 /**
  获取单例
- 
- @return obj
  */
 + (instancetype)sharedService {
     static NIPRnUpdateService *instance = nil;
@@ -106,31 +97,10 @@
 /**
  *  后台静默下载资源包
  */
-- (void)requestRCTAssetsBehind {
-    [self requestRCTAssets:nil
-                 failBlock:nil];
-}
-
-/**
- *  开启rct资源包的下载
- *
- *  @param successBlock
- *  @param failBlock
- */
-- (void)requestRCTAssets:(CFRCTUpdateAssetsSuccesBlock)successBlock
-               failBlock:(CFRCTUpdateAssetsFailBlock)failBlock {
+- (void)requestRCTAssetsBehind:(NSString *)reLoadBundleName {
+    self.reLoadBundleName = reLoadBundleName;
     [self readLocalDataVersion];
-    self.successBlock = successBlock;
-    self.failBlock = failBlock;
-    [self performSelectorInBackground:@selector(doRequest) withObject:nil];
-}
-
-/**
- *  后台线程请求网络
- */
-- (void)doRequest {
-    //先下载配置文件，根据配置文件决定是否下载资源包
-    [self requestRCTConfig];
+    [self performSelectorInBackground:@selector(requestRCTConfig) withObject:nil];
 }
 
 /**
@@ -138,7 +108,6 @@
  */
 - (void)requestRCTConfig {
     __weak __typeof(self) weakSelf = self;
-    //    WEAK_SELF(weakSelf)
     NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/config?version=%@", [NIPRnManager sharedManager].bundleUrl, self.localDataVersion]];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     [self.downloadTask cancel];
@@ -153,7 +122,6 @@
                 if ([weakSelf.delegate respondsToSelector:@selector(failedHandlerWithStatus:)]) {
                     [weakSelf.delegate failedHandlerWithStatus:NIPReadConfigFailed];
                 }
-                //                [weakSelf requestSuccess:NO];
             } else {
                 NSString *actualPath = [filePath absoluteString];
                 if ([actualPath hasPrefix:@"file://"]) {
@@ -167,8 +135,6 @@
 
 /**
  *  读取配置文件
- *
- *  @param configFilePath
  */
 - (void)readConfigFile:(NSString *)configFilePath {
     NSString *content = [NSString stringWithContentsOfFile:configFilePath encoding:NSUTF8StringEncoding error:nil];
@@ -226,9 +192,6 @@
  */
 - (void)downLoadRCTZip:(NSString *)zipName withWholeString:(NSString *)incrementType {
     __weak __typeof(self) weakSelf = self;
-    //    NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.zip?version=%@&sdk=%@", RCT_SERVER_TEST_URL, zipName,self.localDataVersion, self.localSDKVersion]];
-
-    //根据wholeStr判断URL格式
     NSURL *URL;
     if ([incrementType intValue] == 1) {
         URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/all/%@/%@_%@_%@.zip?version=%@&sdk=%@",
@@ -266,7 +229,6 @@
                 if ([weakSelf.delegate respondsToSelector:@selector(failedHandlerWithStatus:)]) {
                     [weakSelf.delegate failedHandlerWithStatus:NIPDownloadBundleFailed];
                 }
-                //                                              [weakSelf requestSuccess:NO];
             } else {
                 NSString *actualPath = [filePath absoluteString];
                 if ([actualPath hasPrefix:@"file://"]) {
@@ -278,7 +240,6 @@
                     if ([weakSelf.delegate respondsToSelector:@selector(failedHandlerWithStatus:)]) {
                         [weakSelf.delegate failedHandlerWithStatus:NIPMD5CheckFailed];
                     }
-                    //                                                [weakSelf requestSuccess:NO];
                 }
             }
         }];
@@ -315,63 +276,20 @@
 }
 
 - (void)unzipBundle:(NSString *)filePath {
-    //filePath
     if (filePath) {
         [self unzipAssets:filePath];
-    } else {
     }
 }
+
 - (void)alertIfUpdateRnZipWithFilePath:(NSString *)filePath {
     if ([self.delegate respondsToSelector:@selector(successHandlerWithFilePath:)]) {
         [self.delegate successHandlerWithFilePath:filePath];
     } else {
         [self unzipAssets:filePath];
-        //        NIPRnController *controller = [[NIPRnManager sharedManager] loadControllerWithModel:@"hotUpdate"];
-        //        [[UIApplication sharedApplication].keyWindow setRootViewController:(UIViewController *) controller];
-        [[NIPRnManager sharedManager] loadBundleUnderDocument];
+        NIPRnController *controller = [[NIPRnManager sharedManager] loadControllerWithModel:self.reLoadBundleName];
+        [[UIApplication sharedApplication].keyWindow setRootViewController:(UIViewController *) controller];
     }
-
-    //  /*最低支持ios8，故直接使用alertViewController*/
-    //  UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"有新的资源包可以更新，是否立即更新" preferredStyle:UIAlertControllerStyleAlert];
-    //  UIAlertAction *actionOK = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-    //    [self unzipAssets:filePath];
-    //    HOTRELOAD_SUPPRESS_Undeclaredselector_WARNING([[[UIApplication sharedApplication] delegate] performSelector:@selector(loadRnController)]);
-    //
-    //  }];
-    //  UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-    //
-    //  }];
-    //  [alertVC addAction:actionOK];
-    //  [alertVC addAction:actionCancel];
-    //
-    //  UIViewController *topController = [[NIPRnHotReloadHelper alloc] topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
-    //
-    //  if (![topController isKindOfClass:[UIAlertController class]]) { //避免alertcontroller弹出多次
-    //    [topController presentViewController:alertVC animated:YES completion:nil];
-    //  }
 }
-
-/**
- *  后台请求完成后，在主线程更新数据
- */
-//- (void)requestSuccess:(BOOL)bSuccess
-//{
-//  if (bSuccess) {
-//        //发送成功通知
-//      [[NSNotificationCenter defaultCenter] postNotificationName:@"RNHotReloadRequestSuccess" object:nil];
-//      if(self.successBlock){
-//          self.successBlock();
-//      }
-//
-//  }else
-//  {
-//      //发送失败通知
-//      [[NSNotificationCenter defaultCenter] postNotificationName:@"RNHotReloadRequestfail" object:nil];
-//      if (self.failBlock) {
-//          self.failBlock();
-//      }
-//  }
-//}
 
 /**
  *  删除老的客户端的rn资源相关文件
@@ -396,13 +314,11 @@
         BOOL ret = [miniZip UnzipFileTo:self.downLoadPath overWrite:YES];
         if (YES == ret) {
             NSLog(@"download ok==");
-            //      [NIPIconFontService registerIconFonts];
             [NIPRnHotReloadHelper registerIconFontsByNames:[[NIPRnManager sharedManager] fontNames]];
         }
         [miniZip UnzipCloseFile];
     }
 
-    //    [self zipRCTDataTest:filePath];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:filePath]) {
         [fileManager removeItemAtPath:filePath error:nil];
@@ -411,7 +327,6 @@
     [self checkAndApplyIncrement];
     [self checkAndApplyAssetsConfig];
     [[NIPRnManager sharedManager] loadBundleUnderDocument];
-    //  [self requestSuccess:YES];
 }
 
 - (void)checkAndApplyIncrement {

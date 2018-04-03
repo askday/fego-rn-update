@@ -152,33 +152,4 @@
     NSLog(@"========subview=%@===end=====",[view class]);
 }
 
-- (void)updateAssets
-{
-  //使用方自己处理indicator的显示
-//    [self showLoadingIndicator];
-    __weak __typeof(self) weakSelf = self;
-    [[NIPRnUpdateService sharedService] requestRCTAssets:^{
-        __strong __typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf updateAssetsSuccess];
-    }
-                                         failBlock:^{
-                                           __strong __typeof(weakSelf) strongSelf = weakSelf;
-                                             [strongSelf updateAssetsFail];
-                                         }];
-}
-
-- (void)updateAssetsSuccess
-{
-  //使用方自己处理indicator的显示关闭
-//    [self dismissLoadingIndicator];
-    [self loadWithBundleName:self.bundleName moduleName:self.moduleName];
-}
-
-- (void)updateAssetsFail
-{
-  //使用方自己处理indicator的显示关闭
-//    [self dismissLoadingIndicator];
-    [self loadWithBundleName:@"index" moduleName:@"RNErrorView"];
-}
-
 @end

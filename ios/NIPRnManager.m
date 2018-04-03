@@ -29,7 +29,6 @@
 
 @end
 
-
 @implementation NIPRnManager
 
 /**
@@ -37,8 +36,7 @@
  
  @return obj
  */
-+ (instancetype)sharedManager
-{
++ (instancetype)sharedManager {
     return [self managerWithBundleUrl:nil noHotUpdate:NO noJsServer:NO];
 }
 
@@ -50,8 +48,7 @@
  @param noJsServer 不通过本地启动的server来获取bundle，直接使用离线包 default:NO
  @return obj
  */
-+ (instancetype)managerWithBundleUrl:(NSString *)bundleUrl noHotUpdate:(BOOL)noHotUpdate noJsServer:(BOOL)noJsServer
-{
++ (instancetype)managerWithBundleUrl:(NSString *)bundleUrl noHotUpdate:(BOOL)noHotUpdate noJsServer:(BOOL)noJsServer {
     static dispatch_once_t predicate;
     static NIPRnManager *manager = nil;
     dispatch_once(&predicate, ^{
@@ -81,8 +78,7 @@
  @param bundleName bundleName
  @return RCTBridge
  */
-- (RCTBridge *)getBridgeByBundleName:(NSString *)bundleName
-{
+- (RCTBridge *)getBridgeByBundleName:(NSString *)bundleName {
     return [self.bundleDic objectForKey:bundleName];
 }
 
@@ -92,9 +88,8 @@
  *  然后获取位于app保内的jsbundle文件
  *  将文件的路径放在一个字典里，如果有重复以document优先
  */
-- (void)initBridgeBundle
-{
-    
+- (void)initBridgeBundle {
+
     NSArray *bundelArray = [self getAllBundles];
     [self loadBundleByNames:bundelArray];
 }
@@ -104,8 +99,7 @@
 
  @param bundleNames bundle名字
  */
-- (void)loadBundleByNames:(NSArray *)bundleNames
-{
+- (void)loadBundleByNames:(NSArray *)bundleNames {
     if (self.noJsServer) {
         for (NSString *bundelName in bundleNames) {
             NSURL *bundelPath = [self getJsLocationPath:bundelName];
@@ -115,7 +109,7 @@
             [self.bundleDic setObject:bridge forKey:bundelName];
         }
     } else {
-//        NSURL *bundelPath = [self getJsLocationPath:@"index"];
+        //        NSURL *bundelPath = [self getJsLocationPath:@"index"];
         NSURL *bundelPath = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:@"index"];
         RCTBridge *bridge = [[RCTBridge alloc] initWithBundleURL:bundelPath
                                                   moduleProvider:nil
@@ -133,25 +127,24 @@
 /**
  热更新完成后，加载存放在Document目录下的被更新的bundle文件
  */
-- (void)loadBundleUnderDocument
-{
+- (void)loadBundleUnderDocument {
     NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentPath = [dirPaths objectAtIndex:0];
-  
+
     NSMutableArray *filenamelist = [NSMutableArray arrayWithCapacity:10];
     NSArray *tmplist = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentPath error:nil];
     NSRange range;
     range.location = 0;
     NSInteger typeLength = [JSBUNDLE length] + 1;
     for (NSString *filename in tmplist) {
-      if ([[filename pathExtension] isEqualToString:JSBUNDLE]) {
-        range.length = filename.length - typeLength;
-        NSString *nameWithoutExtension = [filename substringWithRange:range];
-        [filenamelist addObject:nameWithoutExtension];
-      }
+        if ([[filename pathExtension] isEqualToString:JSBUNDLE]) {
+            range.length = filename.length - typeLength;
+            NSString *nameWithoutExtension = [filename substringWithRange:range];
+            [filenamelist addObject:nameWithoutExtension];
+        }
     }
-  
-  NSArray *docmentBundleNames = filenamelist;
+
+    NSArray *docmentBundleNames = filenamelist;
     [self loadBundleByNames:docmentBundleNames];
 }
 
@@ -162,8 +155,7 @@
 
  @return bundle数组
  */
-- (NSArray *)getAllBundles
-{
+- (NSArray *)getAllBundles {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     id localSDKInfo = [defaults objectForKey:RN_SDK_VERSION];
     id appBuildVersion = [defaults objectForKey:APP_BUILD_VERSION];
@@ -174,21 +166,19 @@
             [self useDefaultRn];
         }
     }
-    
+
     NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentPath = [dirPaths objectAtIndex:0];
     NSArray *docmentBundleNames = [NIPRnHotReloadHelper fileNameListOfType:JSBUNDLE fromDirPath:documentPath];
-  
-  
+
     if (!hotreload_notEmptyArray(docmentBundleNames)) {
         [self useDefaultRn];
     }
     docmentBundleNames = [NIPRnHotReloadHelper fileNameListOfType:JSBUNDLE fromDirPath:documentPath];
     NSString *mainBundlePath = [[NSBundle mainBundle] bundlePath];
-  
-  
+
     NSArray *mainBundles = [NIPRnHotReloadHelper fileNameListOfType:JSBUNDLE fromDirPath:mainBundlePath];
-    
+
     NSMutableArray *array = [NSMutableArray arrayWithArray:docmentBundleNames];
     for (NSString *path in mainBundles) {
         if (![array containsObject:path]) {
@@ -209,14 +199,14 @@
 - (void)copyRnToLocal {
     NSArray *docPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *document = [docPaths objectAtIndex:0];
-    NSString *bundlePath =  [document stringByAppendingPathComponent:@"index.jsbundle"];
+    NSString *bundlePath = [document stringByAppendingPathComponent:@"index.jsbundle"];
     [NIPRnHotReloadHelper copyFile:[[NSBundle mainBundle] pathForResource:@"index" ofType:@"jsbundle"] toPath:bundlePath];
-    NSString *assetsPath =  [document stringByAppendingPathComponent:@"assets"];
+    NSString *assetsPath = [document stringByAppendingPathComponent:@"assets"];
     [NIPRnHotReloadHelper copyFolderFrom:[[NSBundle mainBundle] pathForResource:@"assets" ofType:nil] to:assetsPath];
 
-//    for (NSString *fontName in self.fontNames) {
-//        [NIPIconFontService copyFontToLocalWithName:fontName];
-//    }
+    //    for (NSString *fontName in self.fontNames) {
+    //        [NIPIconFontService copyFontToLocalWithName:fontName];
+    //    }
 }
 
 #pragma mark 加载rn controller
@@ -226,8 +216,7 @@
  @param moduleName moduleName
  @return NIPRnController
  */
-- (NIPRnController *)loadControllerWithModel:(NSString *)moduleName
-{
+- (NIPRnController *)loadControllerWithModel:(NSString *)moduleName {
     return [self loadWithBundleName:@"index" moduleName:moduleName];
 }
 /**
@@ -237,8 +226,7 @@
  @param moduleName moduleName
  @return NIPRnController
  */
-- (NIPRnController *)loadWithBundleName:(NSString *)bundleName moduleName:(NSString *)moduleName
-{
+- (NIPRnController *)loadWithBundleName:(NSString *)bundleName moduleName:(NSString *)moduleName {
     NIPRnController *controller = [[NIPRnController alloc] initWithBundleName:bundleName moduleName:moduleName];
     return controller;
 }
@@ -246,14 +234,14 @@
 /**
  后台静默下载rn资源包
  */
-- (void)requestRCTAssetsBehind
+- (void)requestRCTAssetsBehind:(NSString *)reLoadBundleName;
 {
     NIPRnUpdateService *service = [NIPRnUpdateService sharedService];
     service.delegate = self.delegate;
-    [service requestRCTAssetsBehind];
+    [service requestRCTAssetsBehind:reLoadBundleName];
 }
 
--(void)unzipBundle:(NSString *)filePath{
+- (void)unzipBundle:(NSString *)filePath {
     NIPRnUpdateService *service = [NIPRnUpdateService sharedService];
     [service unzipBundle:filePath];
 }
@@ -268,42 +256,40 @@
 //    return controller;
 //}
 
-- (NSString *)getJsServerIP
-{
+- (NSString *)getJsServerIP {
     NSString *serverIP = @"";
 #if TARGET_OS_SIMULATOR
     serverIP = @"localhost";
 #else
 //    serverIP = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SERVER_IP"];
-    
+
 #endif
     return serverIP;
 }
 
-- (NSURL *)getJsLocationPath:(NSString *)bundleName
-{
+- (NSURL *)getJsLocationPath:(NSString *)bundleName {
     NSURL *jsCodeLocation = nil;
-//    if (self.noJsServer) {
-        if (self.noHotUpdate) {
+    //    if (self.noJsServer) {
+    if (self.noHotUpdate) {
+        jsCodeLocation = [[NSBundle mainBundle] URLForResource:bundleName withExtension:JSBUNDLE];
+    } else {
+        // 优先使用缓存的RN包
+        NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *docsDir = [dirPaths objectAtIndex:0];
+        NSString *bundelFullName = [NSString stringWithFormat:@"/%@.%@", bundleName, JSBUNDLE];
+        NSString *jsBundlePath = [[NSString alloc] initWithString:[docsDir stringByAppendingPathComponent:bundelFullName]];
+        jsCodeLocation = [NSURL URLWithString:jsBundlePath];
+
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if (![fileManager fileExistsAtPath:jsBundlePath]) {
             jsCodeLocation = [[NSBundle mainBundle] URLForResource:bundleName withExtension:JSBUNDLE];
-        } else {
-            // 优先使用缓存的RN包
-            NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *docsDir = [dirPaths objectAtIndex:0];
-            NSString *bundelFullName = [NSString stringWithFormat:@"/%@.%@", bundleName, JSBUNDLE];
-            NSString *jsBundlePath = [[NSString alloc] initWithString:[docsDir stringByAppendingPathComponent:bundelFullName]];
-            jsCodeLocation = [NSURL URLWithString:jsBundlePath];
-            
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            if (![fileManager fileExistsAtPath:jsBundlePath]) {
-                jsCodeLocation = [[NSBundle mainBundle] URLForResource:bundleName withExtension:JSBUNDLE];
-            }
         }
-//    } else {
-//        NSString *serverIP = [self getJsServerIP];
-//        NSString *jsCodeUrlString = [NSString stringWithFormat:@"http://%@:8081/%@.bundle?platform=ios&dev=true", serverIP, bundleName];
-//        jsCodeLocation = [NSURL URLWithString:jsCodeUrlString];
-//    }
+    }
+    //    } else {
+    //        NSString *serverIP = [self getJsServerIP];
+    //        NSString *jsCodeUrlString = [NSString stringWithFormat:@"http://%@:8081/%@.bundle?platform=ios&dev=true", serverIP, bundleName];
+    //        jsCodeLocation = [NSURL URLWithString:jsCodeUrlString];
+    //    }
     return jsCodeLocation;
 }
 

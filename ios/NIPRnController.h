@@ -13,11 +13,6 @@
 
 @interface NIPRnController : UIViewController
 
-///**
-// *  在rn界面启动更新资源
-// */
-//- (void)updateAssets;
-
 /**
  根据业务指定的bundle，加载对应的module
 
@@ -30,16 +25,16 @@
 /**
  rn的根视图
  */
-@property (nonatomic, strong) RCTRootView *rctRootView;
+@property(nonatomic, strong) RCTRootView *rctRootView;
 
 /**
  业务请求时可能需要的参数
  */
-@property (nonatomic, copy, readwrite) NSDictionary *appProperties;
+@property(nonatomic, copy, readwrite) NSDictionary *appProperties;
 
 /**
  rn内嵌的导航条视图
  */
-@property (nonatomic,strong) RCTNavigator *navigator;
+@property(nonatomic, strong) RCTNavigator *navigator;
 
 @end
