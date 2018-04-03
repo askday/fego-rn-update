@@ -54,7 +54,7 @@ public class ReactManager {
      * The constant SDK_VERSION.
      * 用来标记本地rn_sdk的版本号
      */
-    public static String SDK_VERSION = "1.0";
+    public static String SDK_VERSION = "1.0.0";
     /**
      * 用来标记本地rn资源版本号
      */
@@ -393,7 +393,7 @@ public class ReactManager {
             rnSourceUrl = sourceUrl + "all/" + SDK_VERSION + "/" + rnZipName;
         }else {
             rnZipName = "rn_" + SDK_VERSION + "_" + remoteDataVersion + "_" + localDataVersion + "_" + type + ".zip";
-            rnSourceUrl = sourceUrl + "increment/" + SDK_VERSION + "/" + remoteDataVersion + "/" + rnZipName;
+            rnSourceUrl = sourceUrl + "increment/" + SDK_VERSION + "/"  + rnZipName;
         }
         bundleCall = service.downloadFile(rnSourceUrl, new Callback<ResponseBody>() {
             @Override
