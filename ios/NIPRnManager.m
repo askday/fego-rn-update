@@ -89,7 +89,6 @@
  *  将文件的路径放在一个字典里，如果有重复以document优先
  */
 - (void)initBridgeBundle {
-
     NSArray *bundelArray = [self getAllBundles];
     [self loadBundleByNames:bundelArray];
 }
@@ -203,10 +202,6 @@
     [NIPRnHotReloadHelper copyFile:[[NSBundle mainBundle] pathForResource:@"index" ofType:@"jsbundle"] toPath:bundlePath];
     NSString *assetsPath = [document stringByAppendingPathComponent:@"assets"];
     [NIPRnHotReloadHelper copyFolderFrom:[[NSBundle mainBundle] pathForResource:@"assets" ofType:nil] to:assetsPath];
-
-    //    for (NSString *fontName in self.fontNames) {
-    //        [NIPIconFontService copyFontToLocalWithName:fontName];
-    //    }
 }
 
 #pragma mark 加载rn controller
@@ -247,29 +242,18 @@
 }
 
 #pragma mark 工具
-//- (NIPRnController *)topMostController
-//{
-//    NIPRnController *controller = (NIPRnController *)[UIViewController topmostViewController];
-//    if (!controller) {
-//        controller = (NIPRnController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-//    }
-//    return controller;
-//}
-
 - (NSString *)getJsServerIP {
     NSString *serverIP = @"";
 #if TARGET_OS_SIMULATOR
     serverIP = @"localhost";
 #else
-//    serverIP = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SERVER_IP"];
-
+    serverIP = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SERVER_IP"];
 #endif
     return serverIP;
 }
 
 - (NSURL *)getJsLocationPath:(NSString *)bundleName {
     NSURL *jsCodeLocation = nil;
-    //    if (self.noJsServer) {
     if (self.noHotUpdate) {
         jsCodeLocation = [[NSBundle mainBundle] URLForResource:bundleName withExtension:JSBUNDLE];
     } else {
@@ -285,11 +269,6 @@
             jsCodeLocation = [[NSBundle mainBundle] URLForResource:bundleName withExtension:JSBUNDLE];
         }
     }
-    //    } else {
-    //        NSString *serverIP = [self getJsServerIP];
-    //        NSString *jsCodeUrlString = [NSString stringWithFormat:@"http://%@:8081/%@.bundle?platform=ios&dev=true", serverIP, bundleName];
-    //        jsCodeLocation = [NSURL URLWithString:jsCodeUrlString];
-    //    }
     return jsCodeLocation;
 }
 

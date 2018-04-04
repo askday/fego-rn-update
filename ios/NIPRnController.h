@@ -15,10 +15,6 @@
 
 /**
  根据业务指定的bundle，加载对应的module
-
- @param bundleName bundleName
- @param moduleName moduleName
- @return obj
  */
 - (id)initWithBundleName:(NSString *)bundleName moduleName:(NSString *)moduleName;
 

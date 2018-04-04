@@ -108,7 +108,13 @@
  */
 - (void)requestRCTConfig {
     __weak __typeof(self) weakSelf = self;
-    NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/config?version=%@", [NIPRnManager sharedManager].bundleUrl, self.localDataVersion]];
+
+    NSURL *URL = nil;
+    if (self.requestConfigUrl) {
+        URL = [NSURL URLWithString:self.requestConfigUrl];
+    } else {
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/config?version=%@", [NIPRnManager sharedManager].bundleUrl, self.localDataVersion]];
+    }
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     [self.downloadTask cancel];
     self.downloadTask = [_httpSession downloadTaskWithRequest:request
@@ -139,6 +145,16 @@
 - (void)readConfigFile:(NSString *)configFilePath {
     NSString *content = [NSString stringWithContentsOfFile:configFilePath encoding:NSUTF8StringEncoding error:nil];
     NSLog(@"%@", content);
+    if (self.requestConfigUrl) {
+        //  如果是通过接口访问，需要解析data数据
+        NSData *responseData = [content dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *response = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        if ([[response objectForKey:@"retcode"] intValue] == 100) {
+            content = [response objectForKey:@"data"];
+        }
+    }
+    if (!content)
+        return;
     NSArray *array = [content componentsSeparatedByString:@","];
     [[NSFileManager defaultManager] removeItemAtPath:configFilePath error:nil];
 

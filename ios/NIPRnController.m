@@ -42,7 +42,6 @@
 
 /**
  初始化函数
-
  @param bundleName bundleName
  @param moduleName moduleName
  @return obj
@@ -76,7 +75,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.fd_prefersNavigationBarHidden = YES;
     [self loadWithBundleName:self.bundleName moduleName:self.moduleName];
 }
 
@@ -84,20 +82,15 @@
     _appProperties = appProperties;
     BOOL interactivePopDisabled = [[appProperties objectForKey:@"params"]objectForKey:@"popDisable"];
     if (appProperties && interactivePopDisabled) {
-//        self.fd_interactivePopDisabled = interactivePopDisabled;
         self.navigationController.navigationBar.hidden = interactivePopDisabled;
     }
 }
 
-///**
-// 加载本地资源文件
-
-// @param bundleName bundleName
-// @param moduleName moduleName
-// */
+/**
+ * 加载本地资源文件
+ */
 - (void)loadWithBundleName:(NSString *)bundleName moduleName:(NSString *)moduleName
 {
-
     if (self.rctRootView) {
         [self.rctRootView removeFromSuperview];
     }
