@@ -23,6 +23,9 @@ import com.fego.android.utils.AssetUtil;
 import com.fego.android.utils.DiffMatchPatchUtils;
 import com.fego.android.utils.FileUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -74,6 +77,7 @@ public class ReactManager {
     /**
      * 热更新rn资源下载路径
      */
+    private String sourceConfig = "";
     private String sourceUrl = "";
     /**
      * 记录本地rn资源包版本号
@@ -287,12 +291,17 @@ public class ReactManager {
         }
         //请求远程的rn资源最新的配置文件,获取rn最新的对应sdk的数据迭代版本号
         ReactService service = new ReactService();
+
         String rnConfigSourceUrl = sourceUrl + "config";
+        if (this.sourceConfig.length() > 0) {
+            rnConfigSourceUrl = this.sourceConfig;
+        }
+
         configCall = service.downloadFile(rnConfigSourceUrl, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                boolean isReadConfigSuccess = false;
                 if (response.isSuccessful()) {
-                    Log.d(TAG, "load react data behind success!");
                     String downloadFilePath = application.getFilesDir().getAbsolutePath() + File.separator + "rn_config";
                     File file = new File(downloadFilePath);
                     boolean writtenToDisk = FileUtils.writeResponseBodyToDisk(response.body(), file);
@@ -300,13 +309,28 @@ public class ReactManager {
                         byte[] bytes = FileUtils.readFile(downloadFilePath);
                         String configDetail = new String(bytes);
                         Log.d(TAG, configDetail);
-                        checkRNConfigFile(configDetail);
-                    } else {
-                        if (failListener != null) {
-                            failListener.onFail(NPReactManagerTask.GetConfigFail);
+                        if (sourceConfig.length() > 0) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(configDetail);
+                                if (jsonObject.has("retcode") && jsonObject.get("retcode").toString().equals("100")) {
+                                    if (jsonObject.has("data")) {
+                                        String realConfigData = jsonObject.get("data").toString();
+                                        if (realConfigData != null && realConfigData.length() > 0) {
+                                            checkRNConfigFile(realConfigData);
+                                            isReadConfigSuccess = true;
+                                        }
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            checkRNConfigFile(configDetail);
+                            isReadConfigSuccess=true;
                         }
                     }
-                } else {
+                }
+                if (!isReadConfigSuccess) {
                     Log.d(TAG, "load react data behind fail!");
                     if (failListener != null) {
                         failListener.onFail(NPReactManagerTask.GetConfigFail);
@@ -336,7 +360,7 @@ public class ReactManager {
                 String[] infos = line.split("_");
                 if (infos.length > 1) {
                     String remoteSdkVersion = "";
-                    String remoteDataVersion ="";
+                    String remoteDataVersion = "";
                     remoteSdkVersion = infos[0];
                     remoteDataVersion = infos[1];
                     if (infos.length == 3) {
@@ -391,9 +415,9 @@ public class ReactManager {
         if (isAll) {
             rnZipName = "rn_" + SDK_VERSION + "_" + remoteDataVersion + ".zip";
             rnSourceUrl = sourceUrl + "all/" + SDK_VERSION + "/" + rnZipName;
-        }else {
+        } else {
             rnZipName = "rn_" + SDK_VERSION + "_" + remoteDataVersion + "_" + localDataVersion + "_" + type + ".zip";
-            rnSourceUrl = sourceUrl + "increment/" + SDK_VERSION + "/"  + rnZipName;
+            rnSourceUrl = sourceUrl + "increment/" + SDK_VERSION + "/" + rnZipName;
         }
         bundleCall = service.downloadFile(rnSourceUrl, new Callback<ResponseBody>() {
             @Override
@@ -639,6 +663,10 @@ public class ReactManager {
      */
     public void setCurrentActivity(Activity currentActivity) {
         this.currentActivity = currentActivity;
+    }
+
+    public void setSourceConfig(String sourceConfig) {
+        this.sourceConfig = sourceConfig;
     }
 
     /**
