@@ -11,32 +11,17 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RCTBridge.h>
+#import "NIPRnManager.h"
+#import "NIPRnController.h"
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-//  NSURL *jsCodeLocation;
-//
-//  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-//
-//  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-//                                                      moduleName:@"hotUpdate"
-//                                               initialProperties:nil
-//                                                   launchOptions:launchOptions];
-//  rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-//
-//  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-//  UIViewController *rootViewController = [UIViewController new];
-//  rootViewController.view = rootView;
-//  self.window.rootViewController = rootViewController;
-//  [self.window makeKeyAndVisible];
-//  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadRnController) name:@"RNHotReloadRequestSuccess" object:nil];
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NIPRnManager *manager = [NIPRnManager sharedManager];
-  manager.delegate = self;
-  manager.bundleUrl = @"https://raw.githubusercontent.com/fegos/fego-rn-update/master/demo/increment/ios/increment";
-  manager.noHotUpdate = NO;
-  manager.noJsServer = YES;
+  manager.remoteJSBundleRootPath = @"https://raw.githubusercontent.com/fegos/fego-rn-update/master/demo/increment/ios/";
+  manager.useHotUpdate = YES;
+  manager.useJSServer = NO;
   
   [self loadDefaultKeyWindow];
   
@@ -46,45 +31,10 @@
 - (void)loadDefaultKeyWindow {
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   [self loadRnController];
-  /**
-   * 注册字体信息
-   */
-}
-
--(void)successHandlerWithFilePath:(NSString *)filePath{
-  NSLog(@"NIPHotReloadSuccess");
-  [[NIPRnManager sharedManager] unzipBundle:filePath];
-  [self loadRnController];
-}
--(void)failedHandlerWithStatus:(HotReloadStatus)status{
-  switch (status) {
-    case NIPReadConfigFailed:
-    {
-      NSLog(@"NIPReadConfigFailed");
-    }
-      break;
-    case NIPDownloadBundleFailed:
-    {
-      NSLog(@"NIPDownloadBundleFailed");
-    }
-      break;
-    case NIPMD5CheckFailed:
-    {
-      NSLog(@"NIPMD5CheckFailed");
-    }
-      break;
-    default:
-      break;
-  }
-
 }
 
 - (void)loadRnController {
-//  NIPRnController *controller = [[NIPRnManager sharedManager] loadControllerWithModel:@"hotUpdate"];
-  
-  NIPRnController *controller = [[NIPRnManager managerWithBundleUrl:@"https://raw.githubusercontent.com/fegos/fego-rn-update/master/demo/increment/ios/increment" noHotUpdate:NO noJsServer:YES] loadControllerWithModel:@"hotUpdate"];
-//  [NIPRnManager sharedManager].fontNames = @[@"nsip"];
-//  controller.appProperties = @{@"productFlavor": @"ec"};
+  NIPRnController *controller = [[NIPRnManager sharedManager] loadRNControllerWithModule:@"hotUpdate"];
   
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincompatible-pointer-types"
@@ -93,5 +43,30 @@
   
   [self.window makeKeyAndVisible];
 }
+
+
+- (void)failedHandlerWithStatus:(NIPHotUpdateStatus)status{
+  switch (status) {
+    case NIPHotUpdateStatusReadConfigFailed:
+    {
+      NSLog(@"NIPReadConfigFailed");
+    }
+      break;
+    case NIPHotUpdateStatusDownloadBundleFailed:
+    {
+      NSLog(@"NIPDownloadBundleFailed");
+    }
+      break;
+    case NIPHotUpdateStatusCheckMD5Failed:
+    {
+      NSLog(@"NIPMD5CheckFailed");
+    }
+      break;
+    default:
+      break;
+  }
+}
+
+
 
 @end

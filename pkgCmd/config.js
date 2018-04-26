@@ -15,5 +15,5 @@ let username = os.userInfo().username;
 console.log(map[username]);
 module.exports = {
 	path: map[username],
-	sdkVer: '1.0'
+	apkVer: '1.0'
 }
