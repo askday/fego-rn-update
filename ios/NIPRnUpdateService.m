@@ -121,7 +121,11 @@
         progress:nil
         destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
             NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
-            return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
+            
+            NSDate *newDate = [NSDate date];
+            long int timeSp = (long)[newDate timeIntervalSince1970];
+            NSString *tempTime = [NSString stringWithFormat:@"%ld",timeSp];
+            return [documentsDirectoryURL URLByAppendingPathComponent:tempTime];
         }
         completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
             if (error) {
@@ -153,11 +157,13 @@
             content = [response objectForKey:@"data"];
         }
     }
+    
+    //读取完毕后需要删除下载的文件，否则会造成文件读取老的记录
+    [[NSFileManager defaultManager] removeItemAtPath:configFilePath error:nil];
+    
     if (!content)
         return;
     NSArray *array = [content componentsSeparatedByString:@","];
-    [[NSFileManager defaultManager] removeItemAtPath:configFilePath error:nil];
-
     BOOL needDownload = NO;
     for (NSString *line in array) {
         NSArray *items = [line componentsSeparatedByString:@"_"];
