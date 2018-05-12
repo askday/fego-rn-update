@@ -21,3 +21,5 @@ yarn.lock
 temp
 
 demo/ios/hotUpdate.xcworkspace/xcshareddata
+hybriddemo/ios/MultiBundleDemo.xcworkspace/xcshareddata
+package-lock.json
