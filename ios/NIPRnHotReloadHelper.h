@@ -72,7 +72,7 @@
  @param rootViewController 当前的rootViewController
  @return UIViewController
  */
-- (UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController;
+- (UIViewController *)topViewControllerWithRootViewController:(UIViewController *)rootViewController;
 /**
  注册字体文件
 

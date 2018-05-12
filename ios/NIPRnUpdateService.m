@@ -1,16 +1,19 @@
 //
 //  NIPRnUpdateService.m
 //
-
-#import "NIPRnUpdateService.h"
 #import <AFNetworking/AFHTTPSessionManager.h>
 #import <ZipArchive/ZipArchive.h>
-#import "DiffMatchPatch.h"
+
+#import "NIPRnUpdateService.h"
 #import "NIPRnHotReloadHelper.h"
+#import "DiffMatchPatch.h"
 
 #define ZIP @"zip"
 
 @interface NIPRnUpdateService ()
+
+@property (nonatomic, copy) UpdateAssetsSuccesBlock successBlock;
+@property (nonatomic, copy) UpdateAssetsFailBlock failBlock;
 
 @property (nonatomic, strong) AFHTTPSessionManager *httpSession;
 @property (nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
@@ -22,22 +25,23 @@
 /**
  *  用来记录本地数据的版本号，默认为@"0"
  */
-@property (nonatomic, strong) NSString *localDataVersion;
+@property (nonatomic, strong) NSString *localVersion;
 
 /**
- *  用来记录本地数据的SDK版本号,默认=RN_SDK_VERSION
+ *  用来记录本地数据的SDK版本号,默认=KEY_APP_VERSION
  */
-@property (nonatomic, strong) NSString *localSDKVersion;
+@property (nonatomic, strong) NSString *sdkVersion;
 
 /**
  *  用来记录远程数据的版本号，默认为@"0"
  */
-@property (nonatomic, strong) NSString *remoteDataVersion;
+@property (nonatomic, strong) NSString *remoteVersion;
 
 /**
- *  用来记录远程数据的SDK版本号,默认=RN_SDK_VERSION
+ *  用来记录远程包的类型0-增量包 1-全量包
  */
-@property (nonatomic, strong) NSString *remoteSDKVersion;
+@property (nonatomic, strong) NSString *remoteZipType;
+
 /**
  *  用来验证文件的MD5值
  */
@@ -71,36 +75,49 @@
 }
 
 /**
- *  初始化本地请求数据
+ *  后台静默下载资源包
  */
-- (void)readLocalDataVersion {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    id localDataInfo = [defaults objectForKey:RN_DATA_VERSION];
-    if (localDataInfo) {
-        self.localDataVersion = localDataInfo;
-    } else {
-        self.localDataVersion = NIP_RN_DATA_VERSION;
-    }
+- (void)requestRCTAssetsBehind:(UpdateAssetsSuccesBlock)success fail:(UpdateAssetsFailBlock)fail {
+    [self readLocalInfo];
+    self.successBlock = success;
+    self.failBlock = fail;
+    [self performSelectorInBackground:@selector(requestRCTConfig) withObject:nil];
+}
 
-    id localSDKInfo = [defaults objectForKey:RN_SDK_VERSION];
-    if (localSDKInfo) {
-        self.localSDKVersion = localSDKInfo;
-        if (![self.localSDKVersion isEqualToString:NIP_RN_SDK_VERSION]) {
-            self.localDataVersion = @"0";
-            self.localSDKVersion = NIP_RN_SDK_VERSION;
+- (void)updateResult:(id)isSuccess {
+    if ([isSuccess boolValue]) {
+        if (self.successBlock) {
+            self.successBlock();
         }
     } else {
-        self.localSDKVersion = NIP_RN_SDK_VERSION;
+        if (self.failBlock) {
+            self.failBlock();
+        }
     }
 }
 
 /**
- *  后台静默下载资源包
+ *  初始化本地请求数据
  */
-- (void)requestRCTAssetsBehind:(NSString *)reLoadBundleName {
-    self.reLoadBundleName = reLoadBundleName;
-    [self readLocalDataVersion];
-    [self performSelectorInBackground:@selector(requestRCTConfig) withObject:nil];
+- (void)readLocalInfo {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    id localBundleVersion = [defaults objectForKey:KEY_BUNDLE_VERSION];
+    if (localBundleVersion) {
+        self.localVersion = localBundleVersion;
+    } else {
+        self.localVersion = LOCAL_BUNDLE_VERSION;
+    }
+
+    id localSDKInfo = [defaults objectForKey:KEY_APP_VERSION];
+    if (localSDKInfo) {
+        self.sdkVersion = localSDKInfo;
+        if (![self.sdkVersion isEqualToString:APP_VERSION]) {
+            self.localVersion = @"0";
+            self.sdkVersion = APP_VERSION;
+        }
+    } else {
+        self.sdkVersion = APP_VERSION;
+    }
 }
 
 /**
@@ -113,7 +130,7 @@
     if (self.requestConfigUrl) {
         URL = [NSURL URLWithString:self.requestConfigUrl];
     } else {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/config?version=%@", [NIPRnManager sharedManager].bundleUrl, self.localDataVersion]];
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/config?version=%@", self.requestUrl, self.localVersion]];
     }
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     [self.downloadTask cancel];
@@ -121,23 +138,24 @@
         progress:nil
         destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
             NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
-            
+
+            // 设置时间戳时间，避免出现错误
             NSDate *newDate = [NSDate date];
-            long int timeSp = (long)[newDate timeIntervalSince1970];
-            NSString *tempTime = [NSString stringWithFormat:@"%ld",timeSp];
+            long int timeSp = (long) [newDate timeIntervalSince1970];
+            NSString *tempTime = [NSString stringWithFormat:@"%ld", timeSp];
             return [documentsDirectoryURL URLByAppendingPathComponent:tempTime];
         }
         completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
             if (error) {
-                if ([weakSelf.delegate respondsToSelector:@selector(failedHandlerWithStatus:)]) {
-                    [weakSelf.delegate failedHandlerWithStatus:NIPReadConfigFailed];
+                if (self.failBlock) {
+                    self.failBlock();
                 }
             } else {
                 NSString *actualPath = [filePath absoluteString];
                 if ([actualPath hasPrefix:@"file://"]) {
                     actualPath = [actualPath substringFromIndex:7];
                 }
-                [weakSelf readConfigFile:actualPath];
+                [weakSelf performSelectorInBackground:@selector(readConfigFile:) withObject:actualPath];
             }
         }];
     [self.downloadTask resume];
@@ -148,6 +166,7 @@
  */
 - (void)readConfigFile:(NSString *)configFilePath {
     NSString *content = [NSString stringWithContentsOfFile:configFilePath encoding:NSUTF8StringEncoding error:nil];
+    NSLog(@"%@", configFilePath);
     NSLog(@"%@", content);
     if (self.requestConfigUrl) {
         //  如果是通过接口访问，需要解析data数据
@@ -157,53 +176,34 @@
             content = [response objectForKey:@"data"];
         }
     }
-    
+
     //读取完毕后需要删除下载的文件，否则会造成文件读取老的记录
     [[NSFileManager defaultManager] removeItemAtPath:configFilePath error:nil];
-    
+
     if (!content)
         return;
+
     NSArray *array = [content componentsSeparatedByString:@","];
     BOOL needDownload = NO;
     for (NSString *line in array) {
         NSArray *items = [line componentsSeparatedByString:@"_"];
-        NSString *remoteLowDataVersion = nil;
-        BOOL isALL = false;
-        NSString *incrementType = nil; //nil 全量包 否则非全量包
-        if (items.count >= 4) {
-            self.remoteSDKVersion = [items objectAtIndex:0];
-            self.remoteDataVersion = [items objectAtIndex:1];
-            //config文件分为2种形式，区分增量包或是全两包，两个字段是否存在
-            if (items.count == 3) {
-                //1.0_1_md5格式,全量包格式
-                isALL = true;
-                self.remoteMD5 = [items objectAtIndex:2];
-                incrementType = @"1";
-            } else {
-                //1.0_1_0_0|1_md5增量包格式
-                isALL = false;
-                remoteLowDataVersion = [items objectAtIndex:2];
-                incrementType = [items objectAtIndex:3];
-                self.remoteMD5 = [items objectAtIndex:4];
-            }
 
-            if ([self.remoteSDKVersion isEqualToString:NIP_RN_SDK_VERSION]) {
-                if ([self.localDataVersion isEqualToString:remoteLowDataVersion]) {
-                    [self downLoadRCTZip:@"rn" withWholeString:incrementType];
+        //  线上最新包针对本地宝的版本号，如线上是5-4，那么本地是4的时候下载更新
+        NSString *remoteIncrentmentVersion = nil;
+        if (items.count >= 4) {
+            NSString *remoteSDKVersion = [items objectAtIndex:0];
+            self.remoteVersion = [items objectAtIndex:1];
+            //1.0.0_1_0_0|1_md5增量包格式
+            remoteIncrentmentVersion = [items objectAtIndex:2];
+            self.remoteZipType = [items objectAtIndex:3];
+            self.remoteMD5 = [items objectAtIndex:4];
+
+            if ([remoteSDKVersion isEqualToString:APP_VERSION]) {
+                if ([self.localVersion isEqualToString:remoteIncrentmentVersion]) {
+                    [self downLoadZip];
                     needDownload = YES;
                     break;
                 }
-            }
-        }
-    }
-
-    if (!needDownload) {
-        NSString *zipPath = nil;
-        if ((zipPath = [self filePathOfRnZip])) {
-            [self alertIfUpdateRnZipWithFilePath:zipPath];
-        } else {
-            if ([self.delegate respondsToSelector:@selector(successHandlerWithFilePath:)]) {
-                [self.delegate successHandlerWithFilePath:zipPath];
             }
         }
     }
@@ -212,29 +212,20 @@
 /**
  *  执行请求并下载数据
  */
-- (void)downLoadRCTZip:(NSString *)zipName withWholeString:(NSString *)incrementType {
+- (void)downLoadZip {
     __weak __typeof(self) weakSelf = self;
     NSURL *URL;
-    if ([incrementType intValue] == 1) {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/all/%@/%@_%@_%@.zip?version=%@&sdk=%@",
-                                                              [NIPRnManager sharedManager].bundleUrl,
-                                                              self.remoteSDKVersion,
-                                                              zipName,
-                                                              self.remoteSDKVersion,
-                                                              self.remoteDataVersion,
-                                                              self.localDataVersion,
-                                                              self.localSDKVersion]];
+    if (self.remoteZipType.intValue == 0) {
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/increment/%@/%@_%@.zip",
+                                                              self.requestUrl,
+                                                              self.sdkVersion,
+                                                              self.remoteVersion,
+                                                              self.localVersion]];
     } else {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/increment/%@/%@_%@_%@_%@_%@.zip?version=%@&sdk=%@",
-                                                              [NIPRnManager sharedManager].bundleUrl,
-                                                              self.remoteSDKVersion,
-                                                              zipName,
-                                                              self.remoteSDKVersion,
-                                                              self.remoteDataVersion,
-                                                              self.localDataVersion,
-                                                              incrementType,
-                                                              self.localDataVersion,
-                                                              self.localSDKVersion]];
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/increment/%@/%@.zip",
+                                                              self.requestUrl,
+                                                              self.sdkVersion,
+                                                              self.remoteVersion]];
     }
     NSLog(@"%@", URL);
 
@@ -244,12 +235,16 @@
         progress:nil
         destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
             NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
-            return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
+            // 设置时间戳时间，避免出现错误
+            NSDate *newDate = [NSDate date];
+            long int timeSp = (long) [newDate timeIntervalSince1970];
+            NSString *tempTime = [NSString stringWithFormat:@"%ld", timeSp];
+            return [documentsDirectoryURL URLByAppendingPathComponent:tempTime];
         }
         completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
             if (error) {
-                if ([weakSelf.delegate respondsToSelector:@selector(failedHandlerWithStatus:)]) {
-                    [weakSelf.delegate failedHandlerWithStatus:NIPDownloadBundleFailed];
+                if (self.failBlock) {
+                    self.failBlock();
                 }
             } else {
                 NSString *actualPath = [filePath absoluteString];
@@ -257,59 +252,23 @@
                     actualPath = [actualPath substringFromIndex:7];
                 }
                 NSLog(@"热更新zip地址：%@", actualPath);
-                //检查MD5值是否正确
-                if (![weakSelf checkMD5OfRnZip:actualPath]) {
-                    if ([weakSelf.delegate respondsToSelector:@selector(failedHandlerWithStatus:)]) {
-                        [weakSelf.delegate failedHandlerWithStatus:NIPMD5CheckFailed];
-                    }
-                }
+                [weakSelf performSelectorInBackground:@selector(checkMD5OfRnZip:) withObject:actualPath];
             }
         }];
     [self.downloadTask resume];
 }
 
-- (BOOL)checkMD5OfRnZip:(NSString *)path {
-
+- (void)checkMD5OfRnZip:(NSString *)path {
     NSString *MD5OfZip = [NIPRnHotReloadHelper getFileMD5WithPath:path];
     NSLog(@"下载文件的MD5值为：%@", MD5OfZip);
-    //对于没有md5的情况直接返回成功
-    if (!self.remoteMD5 || [self.remoteMD5 isEqualToString:MD5OfZip]) {
-        [[NSUserDefaults standardUserDefaults] setObject:self.remoteDataVersion forKey:RN_DATA_VERSION];
-        [[NSUserDefaults standardUserDefaults] setObject:NIP_RN_SDK_VERSION forKey:RN_SDK_VERSION];
-        [self alertIfUpdateRnZipWithFilePath:path];
-        return true;
-    }
-    return false;
-}
+    if ([self.remoteMD5 isEqualToString:MD5OfZip]) {
+        [self unzipAssets:path];
 
-- (NSString *)filePathOfRnZip {
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentPath = [dirPaths objectAtIndex:0];
-    NSArray *docmentZipNames = [NIPRnHotReloadHelper fileNameListOfType:ZIP fromDirPath:documentPath];
-    if (hotreload_notEmptyArray(docmentZipNames)) {
-        NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
-        NSString *path = [[documentsDirectoryURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.zip", docmentZipNames[0]]] absoluteString];
-        if ([path hasPrefix:@"file://"]) {
-            path = [path substringFromIndex:7];
-        }
-        return path;
-    }
-    return nil;
-}
-
-- (void)unzipBundle:(NSString *)filePath {
-    if (filePath) {
-        [self unzipAssets:filePath];
-    }
-}
-
-- (void)alertIfUpdateRnZipWithFilePath:(NSString *)filePath {
-    if ([self.delegate respondsToSelector:@selector(successHandlerWithFilePath:)]) {
-        [self.delegate successHandlerWithFilePath:filePath];
+        [[NSUserDefaults standardUserDefaults] setObject:self.remoteVersion forKey:KEY_BUNDLE_VERSION];
+        [[NSUserDefaults standardUserDefaults] setObject:APP_VERSION forKey:KEY_APP_VERSION];
+        [self performSelectorOnMainThread:@selector(updateResult:) withObject:@YES waitUntilDone:NO];
     } else {
-        [self unzipAssets:filePath];
-        NIPRnController *controller = [[NIPRnManager sharedManager] loadControllerWithModel:self.reLoadBundleName];
-        [[UIApplication sharedApplication].keyWindow setRootViewController:(UIViewController *) controller];
+        [self performSelectorOnMainThread:@selector(updateResult:) withObject:@NO waitUntilDone:NO];
     }
 }
 
@@ -331,12 +290,12 @@
 }
 
 - (void)unzipAssets:(NSString *)filePath {
+    BOOL unzipOK = NO;
     ZipArchive *miniZip = [[ZipArchive alloc] init];
     if ([miniZip UnzipOpenFile:filePath]) {
-        BOOL ret = [miniZip UnzipFileTo:self.downLoadPath overWrite:YES];
-        if (YES == ret) {
-            NSLog(@"download ok==");
-            [NIPRnHotReloadHelper registerIconFontsByNames:[[NIPRnManager sharedManager] fontNames]];
+        unzipOK = [miniZip UnzipFileTo:self.downLoadPath overWrite:YES];
+        if (YES == unzipOK) {
+            NSLog(@"unzip ok==");
         }
         [miniZip UnzipCloseFile];
     }
@@ -346,9 +305,14 @@
         [fileManager removeItemAtPath:filePath error:nil];
     }
 
-    [self checkAndApplyIncrement];
-    [self checkAndApplyAssetsConfig];
-    [[NIPRnManager sharedManager] loadBundleUnderDocument];
+    if (unzipOK) {
+        [NIPRnHotReloadHelper registerIconFontsByNames:[[NIPRnManager sharedManager] fontNames]];
+        if ([self.remoteZipType intValue] == 0) {
+            [self checkAndApplyIncrement];
+            [self checkAndApplyAssetsConfig];
+        }
+        [[NIPRnManager sharedManager] loadBundleUnderDocument];
+    }
 }
 
 - (void)checkAndApplyIncrement {
