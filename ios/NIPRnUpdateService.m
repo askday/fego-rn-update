@@ -8,8 +8,6 @@
 #import "NIPRnHotReloadHelper.h"
 #import "DiffMatchPatch.h"
 
-#define ZIP @"zip"
-
 @interface NIPRnUpdateService ()
 
 @property (nonatomic, copy) UpdateAssetsSuccesBlock successBlock;
@@ -216,14 +214,17 @@
     __weak __typeof(self) weakSelf = self;
     NSURL *URL;
     if (self.remoteZipType.intValue == 0) {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/increment/%@/%@_%@.zip",
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/increment/%@/rn_%@_%@_%@_%@.zip",
                                                               self.requestUrl,
                                                               self.sdkVersion,
+                                                              self.sdkVersion,
                                                               self.remoteVersion,
-                                                              self.localVersion]];
+                                                              self.localVersion,
+                                                              self.remoteZipType]];
     } else {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/increment/%@/%@.zip",
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/all/%@/rn_%@_%@.zip",
                                                               self.requestUrl,
+                                                              self.sdkVersion,
                                                               self.sdkVersion,
                                                               self.remoteVersion]];
     }
