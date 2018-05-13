@@ -7,14 +7,15 @@
 //
 
 #import "NIPModules.h"
-#import "NIPRnManager.h"
+#import "AppDelegate.h"
 
 @implementation NIPModules
 
 RCT_EXPORT_MODULE(FegoRnUpdate)
 
 RCT_EXPORT_METHOD(hotReload) {
-  [[NIPRnManager sharedManager] requestRCTAssetsBehind];
+    AppDelegate *appDelegate = (AppDelegate *) [[UIApplication sharedApplication] delegate];
+    [appDelegate doHotReload];
 }
 
 @end

@@ -7,33 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* hotUpdateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* hotUpdateTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2613080089230965D560DDA8 /* libPods-hotUpdateTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 044BAAE5B14AF38688CC245D /* libPods-hotUpdateTests.a */; };
 		60DAC0356F29E5D1643176D4 /* libPods-hotUpdate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87B84E6176BC2CCAEE113B4C /* libPods-hotUpdate.a */; };
 		B05FBC9B200F5E5400FDEDDC /* ip.txt in Resources */ = {isa = PBXBuildFile; fileRef = B05FBC9A200F5E5400FDEDDC /* ip.txt */; };
 		B0C8305D1FDFB714002E1E9F /* NIPModules.m in Sources */ = {isa = PBXBuildFile; fileRef = B0C8305C1FDFB714002E1E9F /* NIPModules.m */; };
-		B0C830641FDFC1C0002E1E9F /* index.jsbundle.meta in Resources */ = {isa = PBXBuildFile; fileRef = B0C830621FDFC1C0002E1E9F /* index.jsbundle.meta */; };
-		B0C830651FDFC1C0002E1E9F /* index.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = B0C830631FDFC1C0002E1E9F /* index.jsbundle */; };
+		F4D7A07220A7F34300C57D72 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4D7A07120A7F34300C57D72 /* iconfont.ttf */; };
+		F4D7A07B20A7FC1B00C57D72 /* index.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = F4D7A07520A7FC1B00C57D72 /* index.jsbundle */; };
+		F4D7A07D20A7FC1B00C57D72 /* index.jsbundle.meta in Resources */ = {isa = PBXBuildFile; fileRef = F4D7A07A20A7FC1B00C57D72 /* index.jsbundle.meta */; };
+		F4D7A07F20A7FC2E00C57D72 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = F4D7A07E20A7FC2E00C57D72 /* assets */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = hotUpdate;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* hotUpdateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hotUpdateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* hotUpdateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = hotUpdateTests.m; sourceTree = "<group>"; };
 		044BAAE5B14AF38688CC245D /* libPods-hotUpdateTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-hotUpdateTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* hotUpdate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hotUpdate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = hotUpdate/AppDelegate.h; sourceTree = "<group>"; };
@@ -51,22 +38,16 @@
 		B05FBC9A200F5E5400FDEDDC /* ip.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ip.txt; sourceTree = "<group>"; };
 		B0C8305B1FDFB714002E1E9F /* NIPModules.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NIPModules.h; sourceTree = "<group>"; };
 		B0C8305C1FDFB714002E1E9F /* NIPModules.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NIPModules.m; sourceTree = "<group>"; };
-		B0C830621FDFC1C0002E1E9F /* index.jsbundle.meta */ = {isa = PBXFileReference; lastKnownFileType = text; path = index.jsbundle.meta; sourceTree = "<group>"; };
-		B0C830631FDFC1C0002E1E9F /* index.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.jsbundle; sourceTree = "<group>"; };
 		B5D2947A3E97F49948E4C0AC /* Pods-hotUpdateTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hotUpdateTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-hotUpdateTests/Pods-hotUpdateTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F4D7A07120A7F34300C57D72 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = iconfont.ttf; path = ../app/icon/iconfont.ttf; sourceTree = "<group>"; };
+		F4D7A07520A7FC1B00C57D72 /* index.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.jsbundle; sourceTree = "<group>"; };
+		F4D7A07A20A7FC1B00C57D72 /* index.jsbundle.meta */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.jsbundle.meta; sourceTree = "<group>"; };
+		F4D7A07E20A7FC2E00C57D72 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		FDE7E326F5FCC292F60A4615 /* Pods-hotUpdate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hotUpdate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-hotUpdate/Pods-hotUpdate.debug.xcconfig"; sourceTree = "<group>"; };
 		FE18B302433EAC611CA5BE70 /* Pods-hotUpdateTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hotUpdateTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-hotUpdateTests/Pods-hotUpdateTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		00E356EB1AD99517003FC87E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2613080089230965D560DDA8 /* libPods-hotUpdateTests.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -78,28 +59,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* hotUpdateTests */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F21AD99517003FC87E /* hotUpdateTests.m */,
-				00E356F01AD99517003FC87E /* Supporting Files */,
-			);
-			path = hotUpdateTests;
-			sourceTree = "<group>";
-		};
-		00E356F01AD99517003FC87E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F11AD99517003FC87E /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* hotUpdate */ = {
 			isa = PBXGroup;
 			children = (
 				B0C8303D1FDFB2E4002E1E9F /* modules */,
-				AFB010341FDA9AFC00E10C87 /* rn */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -123,20 +86,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Libraries;
-			sourceTree = "<group>";
-		};
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				F4D7A07420A7FC1B00C57D72 /* RNBundle */,
+				F4D7A07120A7F34300C57D72 /* iconfont.ttf */,
 				B05FBC9A200F5E5400FDEDDC /* ip.txt */,
 				13B07FAE1A68108700A75B9A /* hotUpdate */,
-				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* hotUpdateTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				B07ACAD7F559D3BE9EA3AE23 /* Pods */,
 				281235FB2CB0E2F8DBD2A4B2 /* Frameworks */,
@@ -150,19 +106,8 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* hotUpdate.app */,
-				00E356EE1AD99517003FC87E /* hotUpdateTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		AFB010341FDA9AFC00E10C87 /* rn */ = {
-			isa = PBXGroup;
-			children = (
-				B0C830631FDFC1C0002E1E9F /* index.jsbundle */,
-				B0C830621FDFC1C0002E1E9F /* index.jsbundle.meta */,
-			);
-			name = rn;
-			path = hotUpdate/rn;
 			sourceTree = "<group>";
 		};
 		B07ACAD7F559D3BE9EA3AE23 /* Pods */ = {
@@ -186,36 +131,26 @@
 			path = hotUpdate/modules;
 			sourceTree = "<group>";
 		};
+		F4D7A07420A7FC1B00C57D72 /* RNBundle */ = {
+			isa = PBXGroup;
+			children = (
+				F4D7A07E20A7FC2E00C57D72 /* assets */,
+				F4D7A07520A7FC1B00C57D72 /* index.jsbundle */,
+				F4D7A07A20A7FC1B00C57D72 /* index.jsbundle.meta */,
+			);
+			path = RNBundle;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* hotUpdateTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "hotUpdateTests" */;
-			buildPhases = (
-				A4315F9ECFFA744C67E1B8D9 /* [CP] Check Pods Manifest.lock */,
-				00E356EA1AD99517003FC87E /* Sources */,
-				00E356EB1AD99517003FC87E /* Frameworks */,
-				00E356EC1AD99517003FC87E /* Resources */,
-				AE400D42F68142A60EEEDF64 /* [CP] Embed Pods Frameworks */,
-				1C5603988A3DBF3EC8C2E7B7 /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				00E356F51AD99517003FC87E /* PBXTargetDependency */,
-			);
-			name = hotUpdateTests;
-			productName = hotUpdateTests;
-			productReference = 00E356EE1AD99517003FC87E /* hotUpdateTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		13B07F861A680F5B00A75B9A /* hotUpdate */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "hotUpdate" */;
 			buildPhases = (
-				B02EB8D41FFC79C900307CC3 /* Set IP */,
 				0195797E13EF1DF3E65932E8 /* [CP] Check Pods Manifest.lock */,
+				B02EB8D41FFC79C900307CC3 /* Set IP */,
+				F4D7A07320A7FBA200C57D72 /* Syny Bundle js */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -240,11 +175,6 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					00E356ED1AD99517003FC87E = {
-						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 2R2STMG33A;
-						TestTargetID = 13B07F861A680F5B00A75B9A;
-					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 2R2STMG33A;
 					};
@@ -264,28 +194,22 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* hotUpdate */,
-				00E356ED1AD99517003FC87E /* hotUpdateTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		00E356EC1AD99517003FC87E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4D7A07220A7F34300C57D72 /* iconfont.ttf in Resources */,
+				F4D7A07B20A7FC1B00C57D72 /* index.jsbundle in Resources */,
+				F4D7A07F20A7FC2E00C57D72 /* assets in Resources */,
 				B05FBC9B200F5E5400FDEDDC /* ip.txt in Resources */,
-				B0C830641FDFC1C0002E1E9F /* index.jsbundle.meta in Resources */,
+				F4D7A07D20A7FC1B00C57D72 /* index.jsbundle.meta in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				B0C830651FDFC1C0002E1E9F /* index.jsbundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,7 +231,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		027E3552409DD2187A137945 /* [CP] Embed Pods Frameworks */ = {
@@ -325,39 +249,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-hotUpdate/Pods-hotUpdate-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		1C5603988A3DBF3EC8C2E7B7 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-hotUpdateTests/Pods-hotUpdateTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A4315F9ECFFA744C67E1B8D9 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-hotUpdateTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		AA9583B9C493BDD3A5337C66 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -373,21 +264,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-hotUpdate/Pods-hotUpdate-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AE400D42F68142A60EEEDF64 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-hotUpdateTests/Pods-hotUpdateTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		B02EB8D41FFC79C900307CC3 /* Set IP */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -400,19 +276,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "ip=$(ifconfig | grep 'inet 10.' | head -1 | cut -d \" \" -f 2)\necho $ip\nsed -i \"\" '1 c\\'$'\\n'$ip$'\\n' ip.txt";
+			shellScript = "ip=$(ifconfig en0 inet|grep 'inet' |head -1|cut -d \" \" -f 2)\necho $ip>ip.txt";
+		};
+		F4D7A07320A7FBA200C57D72 /* Syny Bundle js */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Syny Bundle js";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env bash\ncurrent=`pwd`\ncd ../\nbundleout=$current/RNBundle/index.jsbundle\nassets=$current/RNBundle/\nrm -rf $assets\nmkdir $assets\necho $bundleout\necho $assets\necho $PATH\nexport PATH=$PATH:/usr/local/bin\nreact-native bundle --entry-file index.js --platform ios --dev false --bundle-output $bundleout --assets-dest $assets\ncd ios\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		00E356EA1AD99517003FC87E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				00E356F31AD99517003FC87E /* hotUpdateTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -424,14 +306,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* hotUpdate */;
-			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
@@ -446,47 +320,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		00E356F61AD99517003FC87E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B5D2947A3E97F49948E4C0AC /* Pods-hotUpdateTests.debug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 2R2STMG33A;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = hotUpdateTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/hotUpdate.app/hotUpdate";
-			};
-			name = Debug;
-		};
-		00E356F71AD99517003FC87E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = FE18B302433EAC611CA5BE70 /* Pods-hotUpdateTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 2R2STMG33A;
-				INFOPLIST_FILE = hotUpdateTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/hotUpdate.app/hotUpdate";
-			};
-			name = Release;
-		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FDE7E326F5FCC292F60A4615 /* Pods-hotUpdate.debug.xcconfig */;
@@ -625,15 +458,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "hotUpdateTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00E356F61AD99517003FC87E /* Debug */,
-				00E356F71AD99517003FC87E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "hotUpdate" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
