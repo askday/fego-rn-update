@@ -128,7 +128,7 @@
     if (self.requestConfigUrl) {
         URL = [NSURL URLWithString:self.requestConfigUrl];
     } else {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/config?version=%@", self.requestUrl, self.localVersion]];
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/increment/config?version=%@", self.requestUrl, self.localVersion]];
     }
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     [self.downloadTask cancel];
@@ -273,6 +273,10 @@
         [[NSUserDefaults standardUserDefaults] setObject:APP_VERSION forKey:KEY_APP_VERSION];
         [self performSelectorOnMainThread:@selector(updateResult:) withObject:@YES waitUntilDone:NO];
     } else {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if ([fileManager fileExistsAtPath:path]) {
+            [fileManager removeItemAtPath:path error:nil];
+        }
         [self performSelectorOnMainThread:@selector(updateResult:) withObject:@NO waitUntilDone:NO];
     }
 }
