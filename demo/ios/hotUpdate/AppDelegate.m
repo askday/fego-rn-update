@@ -15,7 +15,7 @@
 #import <NIPRnUpdateService.h>
 
 #define MODULE_NAME @"hotUpdate"
-#define BUNDLE_SERVER @"https://raw.githubusercontent.com/fegos/fego-rn-update/master/demo/increment/ios/increment"
+#define BUNDLE_SERVER @"https://raw.githubusercontent.com/askday/fego-rn-update/v0.47.2/test/ios/"
 
 @implementation AppDelegate
 
