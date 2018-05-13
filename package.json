@@ -1,6 +1,6 @@
 {
 	"name": "fego-update",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "fego-rn热更新方案",
 	"keywords": [
 		"fego",
@@ -13,17 +13,14 @@
 		"ios",
 		"package.json",
 		"FegoRnUpdate.podspec",
-		"pkg.sh",
-		"pkgCmd",
-		"README.md",
 		"index.js"
 	],
 	"repository": {
 		"type": "git",
-		"url": "http://github.com/fegos/fego-rn-update"
+		"url": "http://github.com/askday/fego-rn-update"
 	},
 	"bugs": {
-		"url": "http://github.com/fegos/fego-rn-update/issues"
+		"url": "http://github.com/askday/fego-rn-update/issues"
 	},
 	"license": "MIT",
 	"dependencies": {
