@@ -25,3 +25,5 @@ ios/NIPRnHotReload.xcworkspace/xcshareddata
 package-lock.json
 demo/package-lock.json
 hybriddemo/ios/MultiBundleDemo.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+test/ios/tmp
+test/android/tmp

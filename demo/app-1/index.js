@@ -13,10 +13,11 @@ export default class App extends Component {
 				<View style={styles.box}>
 					<Text>字体更新测试</Text>
 					<Text style={[styles.welcome, { fontFamily: 'iconfont' }]}>&#xe60d;</Text>
+					<Text style={[styles.welcome, { fontFamily: 'iconfont' }]}>&#xe62f;</Text>
 				</View>
 				<View style={styles.box}>
 					<Text>内容更新测试</Text>
-					<Text style={styles.welcome}>Welcome to FegoRNUpdate0000!</Text>
+					<Text style={styles.welcome}>Welcome to FegoRNUpdate11111!</Text>
 				</View>
 				<TouchableHighlight
 					underlayColor="transparent"

@@ -62,9 +62,9 @@
     [[NIPRnUpdateService sharedService] requestRCTAssetsBehind:^{
         [weakSelf resetKeyController];
     }
-                                                          fail:^{
-
-                                                          }];
+        fail:^{
+          NSLog(@"更新失败。。。") ;
+        }];
 }
 
 @end
