@@ -107,7 +107,6 @@ public class ReactManager {
      * 用来临时记录增量还是全量
      */
     private String type = null;
-    private boolean isAll = false;
     String rnZipName = "";
     /**
      * 用来临时记录zip包的md5值
@@ -326,7 +325,7 @@ public class ReactManager {
                             }
                         } else {
                             checkRNConfigFile(configDetail);
-                            isReadConfigSuccess=true;
+                            isReadConfigSuccess = true;
                         }
                     }
                 }
@@ -363,19 +362,12 @@ public class ReactManager {
                     String remoteDataVersion = "";
                     remoteSdkVersion = infos[0];
                     remoteDataVersion = infos[1];
-                    if (infos.length == 3) {
-                        isAll = true;
-                        md5Value = infos[2];
-                        type = "1";
-                    } else {
-                        isAll = false;
-                        String localDataVer = infos[2];
-                        if (!localDataVer.equals(localDataVersion)) {
-                            continue;
-                        }
-                        type = infos[3];
-                        md5Value = infos[4];
+                    String localDataVer = infos[2];
+                    if (!localDataVer.equals(localDataVersion)) {
+                        continue;
                     }
+                    type = infos[3];
+                    md5Value = infos[4];
                     if (remoteSdkVersion.equals(SDK_VERSION)) {
                         //如果新版本字典存在,说明是已下载还没有使用的资源,如果跟线上的版本号相同也不必要下载了
                         String needUpdateVersion = ReactPreference.getInstance().getString(NEW_BUNDLE_VERSION);
@@ -412,7 +404,7 @@ public class ReactManager {
     private void loadRNSource(final String remoteDataVersion) {
         ReactService service = new ReactService();
         String rnSourceUrl = "";
-        if (isAll) {
+        if (type.equals("1")) {
             rnZipName = "rn_" + SDK_VERSION + "_" + remoteDataVersion + ".zip";
             rnSourceUrl = sourceUrl + "all/" + SDK_VERSION + "/" + rnZipName;
         } else {
@@ -483,9 +475,7 @@ public class ReactManager {
                 String patchStr = getJsBundle(rnDir + "increment.jsbundle", false);
                 String assetsBundle = getJsBundle(rnDir + "index.jsbundle", false);
                 merge(patchStr, assetsBundle, rnDir);
-            }
-            //c、解析assetsConfig.txt，获取到需要删除的资源文件，进而删除
-            if (!isAll) {
+
                 byte[] bytes = FileUtils.readFile(rnDir + "assetsConfig.txt");
                 String configDetail = new String(bytes);
                 checkAssetconfigFile(configDetail, rnDir);

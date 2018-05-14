@@ -8,7 +8,7 @@ export default class App extends Component {
 			<View style={styles.container}>
 				<View style={styles.box}>
 					<Text>图片更新测试</Text>
-					<Image source={require('./img/app.png')} style={{ width: 50, height: 59 }} />
+					<Image source={require('./img/app.png')} style={{ width: 150, height: 159 }} />
 				</View>
 				<View style={styles.box}>
 					<Text>字体更新测试</Text>

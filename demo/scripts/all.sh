@@ -58,7 +58,7 @@ cd ../
 react-native bundle --entry-file index.js --platform $platform --dev false --bundle-output $deploy/index.jsbundle --assets-dest $deploy
 
 #拷贝字体文件到打包文件夹中
-cp -rf app/icon/*.ttf $deploy/
+cp -rf app-1/icon/*.ttf $deploy/
 
 #生成压缩包放于deploy下
 cd $deploy
