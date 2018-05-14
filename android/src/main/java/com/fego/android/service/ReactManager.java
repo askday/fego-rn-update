@@ -292,7 +292,7 @@ public class ReactManager {
         //请求远程的rn资源最新的配置文件,获取rn最新的对应sdk的数据迭代版本号
         ReactService service = new ReactService();
 
-        String rnConfigSourceUrl = sourceUrl + "config";
+        String rnConfigSourceUrl = sourceUrl + "/increment/config";
         if (this.sourceConfig.length() > 0) {
             rnConfigSourceUrl = this.sourceConfig;
         }

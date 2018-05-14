@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.views.text.ReactFontManager;
 import com.fego.android.service.HotUpdatePackage;
 import com.fego.android.service.ReactManager;
 
@@ -47,7 +49,7 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
                     // 设置加载的文件名
                     ReactManager.getInstance().setBundleName("index.jsbundle");
                     // 设置热更新路径
-                    ReactManager.getInstance().setSourceUrl("https://raw.githubusercontent.com/fegos/fego-rn-update/master/demo/increment/android/");
+                    ReactManager.getInstance().setSourceUrl("https://raw.githubusercontent.com/askday/fego-rn-update/v0.47.2/test/android/");
                     ReactManager.getInstance().setSuccessListener(this);
                     List<ReactPackage> reactPackages = new ArrayList<>();
                     // 添加额外的package
@@ -55,6 +57,8 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
                     ReactManager.getInstance().init(getApplication(), reactPackages, BuildConfig.DEBUG);
                 }
                 mReactInstanceManager = ReactManager.getInstance().getRnInstanceManager();
+                Typeface tf = Typeface.createFromAsset(getAssets(), "font/iconfont.ttf");
+                ReactFontManager.getInstance().setTypeface("iconfont", 0, tf);
             }
             mReactRootView = ReactManager.getInstance().getReactViewByModuleName("hotUpdate", this, null);
             setContentView(mReactRootView);
@@ -112,6 +116,7 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
         if (mReactInstanceManager != null) {
             ReactManager.getInstance().setCurrentActivity(this);
             mReactInstanceManager.onHostResume(this, this);
+            ReactManager.getInstance().loadBundleBehind();
         }
     }
 
