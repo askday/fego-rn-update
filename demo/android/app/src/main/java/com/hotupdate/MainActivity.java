@@ -191,27 +191,32 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
      * 询问是否更新最新包提示
      */
     protected void questionUpdateReactSource() {
-        //此处标记已经下载了新的rn资源包,提示用户是否进行更新
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("温馨提示")
-                .setMessage("有新的资源包可以更新，是否立即更新?")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ReactManager.getInstance().unzipBundle();
-                        ReactManager.getInstance().doReloadBundle();
-                        // 下次启动应用时更新
-                        // ReactManager.getInstance().unzipBundle();
-                    }
-                })
-                .create();
-        dialog.show();
+        try {
+            //此处标记已经下载了新的rn资源包,提示用户是否进行更新
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("温馨提示")
+                    .setMessage("有新的资源包可以更新，是否立即更新?")
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ReactManager.getInstance().unzipBundle();
+                            ReactManager.getInstance().doReloadBundle();
+                            // 下次启动应用时更新
+                            // ReactManager.getInstance().unzipBundle();
+                        }
+                    })
+                    .create();
+            dialog.show();
+        } catch (Exception ex) {
+            ReactManager.getInstance().unzipBundle();
+            ReactManager.getInstance().doReloadBundle();
+        }
     }
 
     @Override
